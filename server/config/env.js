@@ -1,10 +1,12 @@
 import dotenv from 'dotenv';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '../..');
 const envPath = path.join(rootDir, '.env');
+const onVercel = Boolean(process.env.VERCEL);
 
 // Always load from package root — do not depend on process.cwd()
 const dotenvResult = dotenv.config({ path: envPath });
@@ -37,7 +39,10 @@ export const env = {
   deepseekModel: process.env.DEEPSEEK_MODEL || 'deepseek-chat',
 
   uploadMaxBytes: intEnv('UPLOAD_MAX_BYTES', 10 * 1024 * 1024),
-  uploadDir: path.resolve(rootDir, process.env.UPLOAD_DIR || './uploads'),
+  // Vercel only allows writable /tmp; local/prod Node keeps ./uploads
+  uploadDir: onVercel
+    ? path.join(os.tmpdir(), 'excel-helper-uploads')
+    : path.resolve(rootDir, process.env.UPLOAD_DIR || './uploads'),
   sessionTtlMs: intEnv('SESSION_TTL_MS', 2 * 60 * 60 * 1000),
   allowedExtensions: allowed,
 
@@ -52,5 +57,6 @@ export const env = {
 
   rootDir,
   envPath,
-  clientDist: path.resolve(rootDir, 'client/dist'),
+  onVercel,
+  clientDist: path.resolve(rootDir, 'dist'),
 };

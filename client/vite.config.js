@@ -18,7 +18,8 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: path.resolve(__dirname, 'dist'),
+    // Project-root `dist` so Vercel/Express both find the same Output Directory
+    outDir: path.resolve(__dirname, '../dist'),
     emptyOutDir: true,
   },
 });

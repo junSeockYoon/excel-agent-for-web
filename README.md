@@ -49,7 +49,30 @@ npm run build
 npm start
 ```
 
-`npm start`는 `client/dist`를 Express가 함께 서빙합니다 (포트 `PORT`, 기본 3000).
+`npm run build`는 프로젝트 루트 `dist/`에 프론트를 만듭니다.  
+`npm start`는 그 `dist/`를 Express가 함께 서빙합니다 (포트 `PORT`, 기본 3000).
+
+### Vercel 배포
+
+이 앱은 **장수명 Express + 디스크 업로드 + 메모리 세션** 구조라 Vercel(서버리스)과 완전히 맞지 않습니다.  
+그래도 빌드 산출물 경로는 맞춰 두었습니다.
+
+| Vercel 설정 | 값 |
+|-------------|-----|
+| Root Directory | `.` (저장소 루트) |
+| Build Command | `npm run build` (또는 `vercel.json` 기본값) |
+| Output Directory | `dist` |
+| Install Command | `npm install` |
+| Environment | `DEEPSEEK_API_KEY` (챗용), 선택 `DEEPSEEK_BASE_URL` / `DEEPSEEK_MODEL` |
+
+`vercel.json`이 `buildCommand`·`outputDirectory`·`/api` 리라이트를 지정합니다.  
+프론트는 정적 `dist`로 배포되고, `/api/*`는 `api/index.js` 서버리스 함수로 Express를 감싸 호출합니다.
+
+**남는 한계 (Vercel):**
+- 세션이 프로세스 메모리라 콜드스타트·인스턴스 분산 시 유실될 수 있음
+- 업로드는 `/tmp`만 사용 가능 (임시·비영속)
+- Hobby 플랜 요청 본문·실행 시간 한도 (큰 파일·긴 챗에 불리)
+- 안정적인 풀스택은 **Railway / Render / Fly.io** 등에서 `npm run build && npm start` 권장
 
 ## API
 
