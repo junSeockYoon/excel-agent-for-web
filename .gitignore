@@ -1,0 +1,17 @@
+node_modules/
+uploads/
+tmp/
+temp/
+dist/
+client/dist/
+build/
+.coverage/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
+*.local
+.vscode/
+.idea/
