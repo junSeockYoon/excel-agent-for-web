@@ -15,3 +15,6 @@ Thumbs.db
 *.local
 .vscode/
 .idea/
+
+# Local personal workbooks used for smoke (do not publish)
+course-survey-2026-2.xlsx
